@@ -9,9 +9,9 @@ import json
 import random
 import re
 import string
+from urllib.request import urlopen
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
-import blobfile as bf
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
@@ -245,9 +245,9 @@ class DropEval(Eval):
         self.test_jsonl = (
             "https://openaipublic.blob.core.windows.net/simple-evals/drop_v0_dev.jsonl.gz"
         )
-        with gzip.GzipFile(fileobj=bf.BlobFile(self.train_jsonl, "rb"), mode="rb") as f:
+        with gzip.GzipFile(fileobj=urlopen(self.train_jsonl), mode="rb") as f:
             self.train_samples = list(map(json.loads, f.readlines()))
-        with gzip.GzipFile(fileobj=bf.BlobFile(self.test_jsonl, "rb"), mode="rb") as f:
+        with gzip.GzipFile(fileobj=urlopen(self.train_jsonl), mode="rb") as f:
             self.test_samples = list(map(json.loads, f.readlines()))
             if self._num_examples:
                 self.test_samples = random.Random(self.seed).sample(

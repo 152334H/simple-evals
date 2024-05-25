@@ -7,7 +7,6 @@ https://arxiv.org/abs/2103.03874
 import random
 import re
 
-import blobfile as bf
 import pandas
 
 from . import common
@@ -26,7 +25,7 @@ Remember to put your answer on its own line after "Answer:", and you do not need
 class MathEval(Eval):
     def __init__(self, equality_checker: SamplerBase, num_examples: int | None = None):
         df = pandas.read_csv(
-            bf.BlobFile("https://openaipublic.blob.core.windows.net/simple-evals/math_test.csv")
+            "https://openaipublic.blob.core.windows.net/simple-evals/math_test.csv"
         )
         examples = [row.to_dict() for _, row in df.iterrows()]
         if num_examples:
