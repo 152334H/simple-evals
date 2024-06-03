@@ -109,13 +109,12 @@ def score_mgsm(target: str, prediction: str) -> bool:
 def get_lang_examples(lang: str) -> list[dict[str, str]]:
     fpath = LANG_TO_FPATH[lang]
     examples = []
-    with urlopen(fpath) as f:
-        for line in f.read().decode("utf-8").splitlines():
-            inputs, targets = line.strip().split("\t")
-            if "." in targets:
-                raise ValueError(f"targets {targets} contains a decimal point.")
-            # targets = int(targets.replace(",", ""))
-            examples.append({"inputs": inputs, "targets": targets, "lang": lang})
+    for line in common.cached_url_file(fpath).read_text().splitlines():
+        inputs, targets = line.strip().split("\t")
+        if "." in targets:
+            raise ValueError(f"targets {targets} contains a decimal point.")
+        # targets = int(targets.replace(",", ""))
+        examples.append({"inputs": inputs, "targets": targets, "lang": lang})
     return examples
 
 

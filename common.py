@@ -1,13 +1,23 @@
 import os
 from collections import defaultdict
 from multiprocessing.pool import ThreadPool
+from pathlib import Path
 from typing import Any
+from urllib.request import urlretrieve
 
 import jinja2
 import numpy as np
 from tqdm import tqdm
 
 from .types import EvalResult, Message, SamplerBase, SingleEvalResult
+
+def cached_url_file(url: str) -> Path:
+    BASE = Path(__file__).parent / 'eval-cache'
+    BASE.mkdir(exist_ok=True)
+    p = BASE / url[url.rfind('/')+1:]
+    if not p.exists():
+        urlretrieve(url, p)
+    return p
 
 QUERY_TEMPLATE_MULTICHOICE = """
 Answer the following multiple choice question. The last line of your response should be of the following format: 'Answer: $LETTER' (without quotes) where LETTER is one of ABCD. Think step by step before answering.
